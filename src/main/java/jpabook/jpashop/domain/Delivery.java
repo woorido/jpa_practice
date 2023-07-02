@@ -5,7 +5,8 @@ import javax.persistence.*;
 @Entity
 public class Delivery {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     @Column(name = "delivery_id")
     private Long id;
 
@@ -18,7 +19,19 @@ public class Delivery {
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status;
 
+    public Delivery(Address address) {
+        this.address = address;
+    }
+
+    public Delivery() {
+
+    }
+
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public DeliveryStatus getStatus() {
+        return status;
     }
 }

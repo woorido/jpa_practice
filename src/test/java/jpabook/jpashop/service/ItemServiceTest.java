@@ -26,13 +26,9 @@ class ItemServiceTest {
 
     @Test
     void 아이템_등록() {
-        Book book = new Book("author", "isbn");
-        Album album = new Album("artist", "etc");
-        Movie movie = new Movie("director", "actor");
-
-        service.saveItem(book);
-        service.saveItem(album);
-        service.saveItem(movie);
+        service.saveItem(new Book("author", "isbn"));
+        service.saveItem(new Album("artist", "etc"));
+        service.saveItem(new Movie("director", "actor"));
 
         assertThat(repository.findAll().size()).isEqualTo(3);
     }

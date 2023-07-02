@@ -30,6 +30,16 @@ public abstract class Item {
 
     //==비즈니스 로직==//
 
+    public Item(String name, int price, int stockQuantity) {
+        this.name = name;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+    }
+
+    public Item() {
+
+    }
+
     /**
      * stock 증가
      *
@@ -47,11 +57,15 @@ public abstract class Item {
         if (restStock < 0) {
             throw new NotEnoughStockException("need more stock");
         }
-        this.stockQuantity = quantity;
+        this.stockQuantity = restStock;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public int getPrice() {
+        return price;
     }
 
     public int getStockQuantity() {

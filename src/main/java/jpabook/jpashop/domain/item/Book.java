@@ -14,7 +14,11 @@ public class Book extends Item {
         this.isbn = isbn;
     }
 
-    public Book() {
+    public Book(String name, int price, int stockQuantity) {
+        super(name, price, stockQuantity);
+    }
 
+    public Book() {
+        super();
     }
 }

@@ -21,8 +21,9 @@ public class Member {
     //mappedBy : order table 에 있는 member 필드에 의해 매핑되었다는 뜻
     private List<Order> orders = new ArrayList<>();
 
-    public Member(String name) {
+    public Member(String name, Address address) {
         this.name = name;
+        this.address = address;
     }
 
     public Member() {

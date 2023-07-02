@@ -1,5 +1,6 @@
 package jpabook.jpashop.service;
 
+import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ class MemberServiceTest {
 
     @Test
     void 회원가입() {
-        Member member = new Member("kim");
+        Member member = new Member("kim", new Address("서울", "강가", "123-123"));
         Long savedId = memberService.join(member);
         Member findOne = memberRepository.findOne(savedId);
 
@@ -32,8 +33,8 @@ class MemberServiceTest {
 
     @Test
     void 중복_회원_예외() {
-        Member member1 = new Member("kim");
-        Member member2 = new Member("kim");
+        Member member1 = new Member("kim", new Address("서울", "강가", "123-123"));
+        Member member2 = new Member("kim", new Address("서울", "강가", "123-123"));
 
         memberService.join(member1);
         assertThatThrownBy(() -> {
