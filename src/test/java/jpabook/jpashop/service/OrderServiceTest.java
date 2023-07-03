@@ -45,14 +45,12 @@ class OrderServiceTest {
         member = new Member("회원1", new Address("서울", "강가", "123-123"));
         em.persist(member);
 
-        item = new Book("시골 JPA", 10000, 10);
+        item = new Book("시골 JPA", 10000, 10, "author1", "isbn1");
         em.persist(item);
     }
 
     @Test
     void 상품_주문() {
-
-
         int orderCount = 2;
 
         Long orderId = orderService.order(member.getId(), item.getId(), orderCount);

@@ -14,8 +14,14 @@ import java.util.List;
 public class ItemService {
     private final ItemRepository itemRepository;
 
-    public void saveItem(Item item) {
+    public Long saveItem(Item item) {
         itemRepository.save(item);
+        return item.getId();
+    }
+
+    public void updateItem(Long itemId, UpdateItemDto updateItemDto) {
+        Item findItem = itemRepository.findOne(itemId); //영속상태의 findItem
+        findItem.updateItem(updateItemDto);
     }
 
     @Transactional(readOnly = true)

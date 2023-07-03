@@ -2,8 +2,10 @@ package jpabook.jpashop.service;
 
 import jpabook.jpashop.domain.item.Album;
 import jpabook.jpashop.domain.item.Book;
+import jpabook.jpashop.domain.item.Item;
 import jpabook.jpashop.domain.item.Movie;
 import jpabook.jpashop.repository.ItemRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +26,19 @@ class ItemServiceTest {
     @Autowired
     ItemRepository repository;
 
+    private Long bookNo;
+    private Long albumNo;
+    private Long movieNo;
+
+    @BeforeEach
+    void setUp(){
+        bookNo = service.saveItem(new Book("before", 1000, 10, "author", "isbn"));
+        albumNo = service.saveItem(new Album("artist", "etc"));
+        movieNo = service.saveItem(new Movie("director", "actor"));
+    }
+
     @Test
     void 아이템_등록() {
-        service.saveItem(new Book("author", "isbn"));
-        service.saveItem(new Album("artist", "etc"));
-        service.saveItem(new Movie("director", "actor"));
-
         assertThat(repository.findAll().size()).isEqualTo(3);
     }
 
@@ -42,5 +51,17 @@ class ItemServiceTest {
 
         book.removeStock(2);
         assertThat(book.getStockQuantity()).isEqualTo(2);
+    }
+
+    @Test
+    void 변경(){
+        UpdateItemDto updateItemDto = new UpdateItemDto("after", 2000, 20);
+        service.updateItem(bookNo, updateItemDto);
+
+        Item updateItem = repository.findOne(bookNo);
+
+        assertThat(updateItem.getName()).isEqualTo("after");
+        assertThat(updateItem.getPrice()).isEqualTo(2000);
+        assertThat(updateItem.getStockQuantity()).isEqualTo(20);
     }
 }

@@ -14,11 +14,21 @@ public class Book extends Item {
         this.isbn = isbn;
     }
 
-    public Book(String name, int price, int stockQuantity) {
+    public Book(String name, int price, int stockQuantity, String author, String isbn) {
         super(name, price, stockQuantity);
+        this.author = author;
+        this.isbn = isbn;
     }
 
     public Book() {
         super();
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getIsbn() {
+        return isbn;
     }
 }

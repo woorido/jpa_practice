@@ -2,6 +2,7 @@ package jpabook.jpashop.domain.item;
 
 import jpabook.jpashop.domain.Category;
 import jpabook.jpashop.exception.NotEnoughStockException;
+import jpabook.jpashop.service.UpdateItemDto;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,10 +28,14 @@ public abstract class Item {
     @ManyToMany(mappedBy = "items")
     private List<Category> categories = new ArrayList<>();
 
-
-    //==비즈니스 로직==//
-
     public Item(String name, int price, int stockQuantity) {
+        this.name = name;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+    }
+
+    public Item(Long id, String name, int price, int stockQuantity) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.stockQuantity = stockQuantity;
@@ -39,6 +44,8 @@ public abstract class Item {
     public Item() {
 
     }
+
+    //==비즈니스 로직==//
 
     /**
      * stock 증가
@@ -60,12 +67,31 @@ public abstract class Item {
         this.stockQuantity = restStock;
     }
 
+    /**
+     * update item
+     *
+     * @param updateItemDto
+     */
+    public void updateItem(UpdateItemDto updateItemDto) {
+        this.price = updateItemDto.getPrice();
+        this.stockQuantity = updateItemDto.getStockQuantity();
+        this.name = updateItemDto.getName();
+    }
+
     public Long getId() {
         return id;
     }
 
     public int getPrice() {
         return price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
     }
 
     public int getStockQuantity() {
