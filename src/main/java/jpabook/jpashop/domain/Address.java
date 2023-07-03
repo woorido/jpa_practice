@@ -1,8 +1,11 @@
 package jpabook.jpashop.domain;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
 
 @Embeddable
+@Access(AccessType.FIELD)
 public class Address {
 
     private String city;
@@ -17,6 +20,18 @@ public class Address {
 
     public Address() {
 
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public String getZipCode() {
+        return zipCode;
     }
 
 }
