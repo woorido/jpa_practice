@@ -3,7 +3,6 @@ package jpabook.jpashop.domain;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 public class Member {
@@ -46,26 +45,4 @@ public class Member {
         return orders;
     }
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", address=" + address +
-                ", orders=" + orders +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Member member = (Member) o;
-        return Objects.equals(id, member.id) && Objects.equals(name, member.name) && Objects.equals(address, member.address) && Objects.equals(orders, member.orders);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, address, orders);
-    }
 }

@@ -50,8 +50,8 @@ public class OrderRepository {
 
     private BooleanExpression nameLike(String memberName) {
         if (StringUtils.hasText(memberName)) {
-            return null;
+            return member.name.like(memberName);
         }
-        return member.name.like(memberName);
+        return null;
     }
 }

@@ -2,12 +2,12 @@ package jpabook.jpashop.domain;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "orders")
@@ -35,7 +35,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    public Order(Member member, Delivery delivery, List<OrderItem> orderItems, OrderStatus status, LocalDateTime orderDate) {
+    protected Order(Member member, Delivery delivery, List<OrderItem> orderItems, OrderStatus status, LocalDateTime orderDate) {
         this.member = member;
         this.delivery = delivery;
         this.orderItems = orderItems;
@@ -51,11 +51,21 @@ public class Order {
         return orderItems;
     }
 
+    public Member getMember() {
+        return member;
+    }
+
+    public Delivery getDelivery() {
+        return delivery;
+    }
+
+    public LocalDateTime getOrderDate() {
+        return orderDate;
+    }
+
     public OrderStatus getStatus() {
         return status;
     }
-
-    //==연관관계 편의 메서드==//
 
     public void setMember(Member member) {
         if (this.member != null) {
@@ -68,22 +78,24 @@ public class Order {
         }
     }
 
-    public void addOrderItem(OrderItem orderItem) {
-        orderItems.add(orderItem);
-        orderItem.setOrder(this);
-    }
-
     public void setDelivery(Delivery delivery) {
         this.delivery = delivery;
         delivery.setOrder(this);
     }
 
     //==생성 메서드==//
-    public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems) {
-        return new Order(member, delivery, List.of(orderItems), OrderStatus.ORDER, LocalDateTime.now());
+    public static Order createOrder(Member member, Delivery delivery, List<OrderItem> orderItems) {
+        Order order = new Order(member, delivery, orderItems, OrderStatus.ORDER, LocalDateTime.now());
+        for (OrderItem orderItem : orderItems) {
+            orderItem.setOrder(order);
+        }
+        delivery.setOrder(order);
+        return order;
     }
 
-    //==비즈니스 로직==//
+    public void setOrderDate(LocalDateTime orderDate) {
+        this.orderDate = orderDate;
+    }
 
     /**
      * 주문 취소
@@ -98,37 +110,10 @@ public class Order {
         }
     }
 
-    //==조회 로직==//
-
     /**
      * 전체 주문 가격 조회
      */
     public int getTotalPrice() {
         return orderItems.stream().mapToInt(OrderItem::getTotalPrice).sum();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Order order = (Order) o;
-        return Objects.equals(id, order.id) && Objects.equals(member, order.member) && Objects.equals(orderItems, order.orderItems) && Objects.equals(delivery, order.delivery) && Objects.equals(orderDate, order.orderDate) && status == order.status;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, member, orderItems, delivery, orderDate, status);
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", member=" + member +
-                ", orderItems=" + orderItems +
-                ", delivery=" + delivery +
-                ", orderDate=" + orderDate +
-                ", status=" + status +
-                '}';
     }
 }

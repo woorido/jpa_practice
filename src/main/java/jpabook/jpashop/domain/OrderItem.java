@@ -3,6 +3,7 @@ package jpabook.jpashop.domain;
 import jpabook.jpashop.domain.item.Item;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -34,6 +35,20 @@ public class OrderItem {
         this.count = count;
     }
 
+    public static OrderItem createOrderItem(Item item, int orderPrice, int count) {
+        OrderItem orderItem = new OrderItem(item, orderPrice, count);
+        item.removeStock(count);
+        return orderItem;
+    }
+
+    public void cancel() {
+        getItem().addStock(count);
+    }
+
+    public int getTotalPrice() {
+        return getOrderPrice() * getCount();
+    }
+
     public void setOrder(Order order) {
         this.order = order;
     }
@@ -50,45 +65,19 @@ public class OrderItem {
         return orderPrice;
     }
 
-    //==생성 메서드==//
-    public static OrderItem createOrderItem(Item item, int orderPrice, int count) {
-        OrderItem orderItem = new OrderItem(item, orderPrice, count);
-        System.out.println("count = " + count);
-        item.removeStock(count);
-        System.out.println("orderItem = " + orderItem);
-        return orderItem;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    //==비즈니스 로직==//
-    public void cancel() {
-        getItem().addStock(count);
+    public void setItem(Item item) {
+        this.item = item;
     }
 
-    public int getTotalPrice() {
-        return getOrderPrice() * getCount();
+    public void setOrderPrice(int orderPrice) {
+        this.orderPrice = orderPrice;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        OrderItem orderItem = (OrderItem) o;
-        return orderPrice == orderItem.orderPrice && count == orderItem.count && Objects.equals(id, orderItem.id) && Objects.equals(item, orderItem.item) && Objects.equals(order, orderItem.order);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, item, order, orderPrice, count);
-    }
-
-    @Override
-    public String toString() {
-        return "OrderItem{" +
-                "id=" + id +
-                ", item=" + item +
-                ", order=" + order +
-                ", orderPrice=" + orderPrice +
-                ", count=" + count +
-                '}';
+    public void setCount(int count) {
+        this.count = count;
     }
 }

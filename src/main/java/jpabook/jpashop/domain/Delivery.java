@@ -1,8 +1,11 @@
 package jpabook.jpashop.domain;
 
+import lombok.ToString;
+
 import javax.persistence.*;
 
 @Entity
+@ToString(exclude = "delivery")
 public class Delivery {
 
     @Id
@@ -25,6 +28,18 @@ public class Delivery {
 
     public Delivery() {
 
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public Address getAddress() {
+        return address;
     }
 
     public void setOrder(Order order) {
