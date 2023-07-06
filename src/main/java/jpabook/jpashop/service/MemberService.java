@@ -5,7 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr353.JSR353Module;
 import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Member;
-import jpabook.jpashop.dto.UpdateMemberResponse;
+import jpabook.jpashop.dto.member.UpdateMemberResponse;
 import jpabook.jpashop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -62,7 +62,6 @@ public class MemberService {
         originMember.changeMember(modifiedMember.getName(), modifiedMember.getAddress());
         return new UpdateMemberResponse(modifiedMember);
     }
-
 
     private Member mergePerson(Member originalPerson, JsonPatch jsonPatch) {
         ObjectMapper objectMapper = new ObjectMapper();

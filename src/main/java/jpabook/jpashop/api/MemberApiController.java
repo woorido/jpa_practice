@@ -1,11 +1,8 @@
 package jpabook.jpashop.api;
 
-import jpabook.jpashop.dto.UpdateMemberResponse;
-import jpabook.jpashop.domain.Address;
+import jpabook.jpashop.dto.member.*;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.service.MemberService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,24 +24,12 @@ public class MemberApiController {
     }
 
     @GetMapping("/api/v2/members")
-    public Result membersV2() {
+    public GetMemberResponse membersV2() {
         List<Member> members = memberService.findMembers();
-        List<MemberDto> collect = members.stream()
-                .map(m -> new MemberDto((m.getName())))
+        List<GetMemberResponse.MemberDto> collect = members.stream()
+                .map(m -> new GetMemberResponse.MemberDto(m.getId(), m.getName(), m.getAddress()))
                 .collect(Collectors.toList());
-        return new Result(collect);
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class Result<T> {
-        private T data;
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class MemberDto {
-        private String name;
+        return new GetMemberResponse(members.size(), collect);
     }
 
     @PostMapping("/api/v1/members")
@@ -72,26 +57,4 @@ public class MemberApiController {
         UpdateMemberResponse updateMemberResponse = memberService.patchMember(id, jsonPatch);
         return ResponseEntity.ok().body(updateMemberResponse);
     }
-
-    @Data
-    static class CreateMemberRequest {
-        private String name;
-        private Address address;
-    }
-
-    @Data
-    public static class UpdateMemberRequest {
-        private String name;
-        private Address address;
-    }
-
-    @Data
-    static class CreateMemberResponse {
-        private Long id;
-
-        public CreateMemberResponse(Long id) {
-            this.id = id;
-        }
-    }
-
 }
