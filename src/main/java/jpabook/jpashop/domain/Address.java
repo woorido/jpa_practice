@@ -25,13 +25,9 @@ public class Address {
     public String getCity() {
         return city;
     }
-
     public String getStreet() {
         return street;
     }
 
-    public String getZipCode() {
-        return zipCode;
-    }
 
 }

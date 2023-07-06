@@ -1,6 +1,7 @@
 package jpabook.jpashop.domain;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,8 @@ public class Member {
     @GeneratedValue
     @Column(name = "member_id")
     private Long id;
+
+    @NotEmpty
     private String name;
 
     @Embedded
@@ -27,6 +30,11 @@ public class Member {
 
     public Member() {
 
+    }
+
+    public void changeMember(String name, Address address) {
+        this.name = name;
+        this.address = address;
     }
 
     public Long getId() {

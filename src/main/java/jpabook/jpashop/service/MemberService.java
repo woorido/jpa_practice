@@ -1,11 +1,19 @@
 package jpabook.jpashop.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr353.JSR353Module;
+import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.dto.UpdateMemberResponse;
 import jpabook.jpashop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.json.JsonPatch;
+import javax.json.JsonStructure;
+import javax.json.JsonValue;
 import java.util.List;
 
 @Service
@@ -39,5 +47,29 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Member findMember(Long id) {
         return memberRepository.findOne(id);
+    }
+
+    @Transactional
+    public void update(Long id, String name, Address address) {
+        Member member = memberRepository.findOne(id);
+        member.changeMember(name, address);
+    }
+
+    @Transactional
+    public UpdateMemberResponse patchMember(Long id, JsonPatch jsonPatch) {
+        Member originMember = memberRepository.findOne(id);
+        Member modifiedMember = mergePerson(originMember, jsonPatch);
+        originMember.changeMember(modifiedMember.getName(), modifiedMember.getAddress());
+        return new UpdateMemberResponse(modifiedMember);
+    }
+
+
+    private Member mergePerson(Member originalPerson, JsonPatch jsonPatch) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.registerModule(new JSR353Module());
+        JsonStructure target = objectMapper.convertValue(originalPerson, JsonStructure.class);
+        JsonValue patchedPerson = jsonPatch.apply(target);
+        return objectMapper.convertValue(patchedPerson, Member.class);
     }
 }
