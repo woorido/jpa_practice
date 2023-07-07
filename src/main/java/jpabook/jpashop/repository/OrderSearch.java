@@ -6,6 +6,8 @@ public class OrderSearch {
     private String memberName;
     private OrderStatus orderStatus;
 
+    public OrderSearch() {}
+
     public OrderSearch(String memberName, OrderStatus orderStatus) {
         this.memberName = memberName;
         this.orderStatus = orderStatus;

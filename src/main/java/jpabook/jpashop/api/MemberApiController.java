@@ -1,8 +1,11 @@
 package jpabook.jpashop.api;
 
+import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.dto.member.*;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.service.MemberService;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,12 +27,26 @@ public class MemberApiController {
     }
 
     @GetMapping("/api/v2/members")
-    public GetMemberResponse membersV2() {
+    public Result membersV2() {
         List<Member> members = memberService.findMembers();
-        List<GetMemberResponse.MemberDto> collect = members.stream()
-                .map(m -> new GetMemberResponse.MemberDto(m.getId(), m.getName(), m.getAddress()))
+        List<MemberDto> collect = members.stream()
+                .map(m -> new MemberDto(m.getName(), m.getAddress()))
                 .collect(Collectors.toList());
-        return new GetMemberResponse(members.size(), collect);
+        return new Result(collect, collect.size());
+    }
+
+    @Data
+    @AllArgsConstructor
+    class Result<T> {
+        private T data;
+        private int count;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class MemberDto {
+        private String name;
+        private Address address;
     }
 
     @PostMapping("/api/v1/members")

@@ -1,5 +1,7 @@
 package jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ public class Member {
     @Embedded
     private Address address;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member")//한 회원이 여러 상품을 주문할 수 있음 //연관관계 주인을 fk 와 가까운 Order 의 member 로 지정해야함.
     //mappedBy : order table 에 있는 member 필드에 의해 매핑되었다는 뜻
     private List<Order> orders = new ArrayList<>();

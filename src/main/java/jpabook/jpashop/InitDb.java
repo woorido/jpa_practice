@@ -17,7 +17,7 @@ public class InitDb {
     private final InitService initService;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         initService.dbInit1();
         initService.dbInit2();
     }
@@ -25,9 +25,11 @@ public class InitDb {
     @Component
     @Transactional
     @RequiredArgsConstructor
-    static class InitService{
+    static class InitService {
+
         private final EntityManager em;
-        public void dbInit1(){
+
+        public void dbInit1() {
             Member member = new Member("userA", new Address("서울", "1", "2"));
             em.persist(member);
 
@@ -44,7 +46,8 @@ public class InitDb {
 
             em.persist(order);
         }
-        public void dbInit2(){
+
+        public void dbInit2() {
             Member member = new Member("userB", new Address("대전", "3", "4"));
             em.persist(member);
 
