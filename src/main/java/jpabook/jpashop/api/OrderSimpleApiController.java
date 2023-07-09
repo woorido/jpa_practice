@@ -1,19 +1,18 @@
 package jpabook.jpashop.api;
 
-import jpabook.jpashop.domain.Address;
 import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderStatus;
+import jpabook.jpashop.dto.order.SimpleOrderDto;
 import jpabook.jpashop.repository.OrderRepository;
 import jpabook.jpashop.repository.OrderSearch;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -28,6 +27,7 @@ import static java.util.stream.Collectors.toList;
 public class OrderSimpleApiController {
 
     private final OrderRepository orderRepository;
+    private final OrderSimpleQueryRepository orderSimpleQueryRepository;
 
     //N+1 문제
     @GetMapping("/api/v1/simple-orders")
@@ -40,7 +40,7 @@ public class OrderSimpleApiController {
         return orders;
     }
 
-    //N+1 문제
+    //엔티티를 DTO로 반환 (N+1 문제)
     @GetMapping("/api/v2/simple-orders")
     public Result ordersV2() {
         List<Order> orders = orderRepository.findAll(new OrderSearch());
@@ -50,7 +50,7 @@ public class OrderSimpleApiController {
         return new Result(collect, collect.size());
     }
 
-    //fetch join 사용
+    //fetch join 사용하여 성능 최적화
     @GetMapping("/api/v3/simple-orders")
     public Result ordersV3() {
         List<Order> orders = orderRepository.findAllWithMemberDelivery();
@@ -60,30 +60,16 @@ public class OrderSimpleApiController {
         return new Result(collect, collect.size());
     }
 
+    @GetMapping("/api/v4/simple-orders")
+    public Result ordersV4() {
+        List<OrderSimpleQueryDto> orders = orderSimpleQueryRepository.findOrderDto();
+        return new Result(orders, orders.size());
+    }
+
     @Data
     @AllArgsConstructor
     class Result<T> {
         private T data;
         private int count;
     }
-
-    @Data
-    static class SimpleOrderDto {
-        private Long orderId;
-        private String name;
-        private LocalDateTime orderDate;
-        private OrderStatus orderStatus;
-        private Address address;
-
-        public SimpleOrderDto(Order order) {
-            orderId = order.getId();
-            name = order.getMember().getName();
-            orderDate = order.getOrderDate();
-            orderStatus = order.getStatus();
-            address = order.getDelivery().getAddress();
-        }
-
-    }
-
-
 }
